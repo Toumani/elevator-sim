@@ -1,5 +1,6 @@
 package io.elevatorsim.story;
 
+import io.elevatorsim.main.FloorView;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.event.ActionEvent;
@@ -16,6 +17,8 @@ import javafx.util.StringConverter;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+
+import static io.elevatorsim.ElevatorSimApplication.mainController;
 
 public class StoryBoardView extends VBox implements Initializable {
     @FXML Label user_LBL;
@@ -38,6 +41,7 @@ public class StoryBoardView extends VBox implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         action_CMB.getItems().addAll(Action.ARRIVE, Action.ENTER, Action.EXIT);
+        action_CMB.getSelectionModel().selectFirst();
         action_CMB.setConverter(new StringConverter<Action>() {
             @Override
             public String toString(Action action) {
@@ -56,7 +60,24 @@ public class StoryBoardView extends VBox implements Initializable {
         bindTextFieldToIntegerProperty(nbUser_TXTF, nbUser);
         bindTextFieldToIntegerProperty(floorNb_TXTF, floorNb);
 
-        execute_BTN.setOnAction((ActionEvent e) -> System.out.println(nbUser.get() + " user(s) " + action_CMB.getSelectionModel().getSelectedItem() + " at floor " + floorNb.get()));
+        execute_BTN.setOnAction((ActionEvent e) -> {
+            System.out.println(nbUser.get() + " user(s) " + action_CMB.getSelectionModel().getSelectedItem() + " at floor " + floorNb.get());
+            FloorView floorView = mainController.getFloor(floorNb.get());
+            switch (action_CMB.getSelectionModel().getSelectedItem()) {
+                case ARRIVE:
+                    for (int i = 0; i < nbUser.get(); i++)
+                        floorView.pushRandomUser();
+                    break;
+                case ENTER:
+                    for (int i = 0; i < nbUser.get(); i++)
+                        floorView.popUser();
+                    break;
+                case EXIT:
+                    for (int i = 0; i < nbUser.get(); i++)
+                        floorView.pullRandomUser();
+                    break;
+            }
+        });
 
     }
 

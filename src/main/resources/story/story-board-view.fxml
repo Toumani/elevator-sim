@@ -5,6 +5,7 @@
 
 <?import javafx.scene.text.Font?>
 <?import javafx.geometry.Insets?>
+
 <fx:root type="io.elevatorsim.story.StoryBoardView" prefWidth="400.0" spacing="10.0" BorderPane.alignment="CENTER" xmlns="http://javafx.com/javafx"
          xmlns:fx="http://javafx.com/fxml">
     <children>
@@ -18,11 +19,11 @@
         </Label>
         <FlowPane hgap="10.0">
             <children>
-                <TextField fx:id="nbUser_TXTF" prefColumnCount="2" />
+                <TextField fx:id="nbUser_TXTF" text="1" prefColumnCount="2" />
                 <Label fx:id="user_LBL" text="user(s)" />
                 <ComboBox fx:id="action_CMB" prefWidth="150.0" promptText="action" />
                 <Label text="at floor" />
-                <TextField fx:id="floorNb_TXTF" prefColumnCount="2" />
+                <TextField fx:id="floorNb_TXTF" text="0" prefColumnCount="2" />
             </children></FlowPane>
         <Button fx:id="execute_BTN" mnemonicParsing="false" text="Execute" />
     </children>

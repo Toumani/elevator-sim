@@ -9,6 +9,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.VBox;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -16,12 +17,14 @@ import java.util.ResourceBundle;
 public class MainController implements Initializable {
     @FXML private BorderPane root_BDP;
     @FXML private AnchorPane root_ANC;
+    @FXML private VBox floorsContainer_VBX;
     @FXML private ImageView elevator_IMG;
 
     private int floorNb = 0;
 
     private final static double BASE_HEIGHT = 110.;
     private final static double FLOOR_HEIGHT = 80;
+    private final static int NB_FLOORS = 10;
 
     public MainController() {
         ElevatorSimApplication.mainController = this;
@@ -30,6 +33,12 @@ public class MainController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        // Main
+        floorsContainer_VBX.getChildren().clear();
+        for (int i = 0; i < NB_FLOORS; i++)
+            floorsContainer_VBX.getChildren().add(new FloorView());
+
+        // Elevator board
         ElevatorBoardView elevatorBoardView = new ElevatorBoardView(5);
         elevatorBoardView.add(new ElevatorButtonView(elevatorBoardView, "L", 0, true));
         elevatorBoardView.add(new ElevatorButtonView(elevatorBoardView, "1", 1));
@@ -48,6 +57,7 @@ public class MainController implements Initializable {
         AnchorPane.setRightAnchor(elevatorBoardView, 45.);
         AnchorPane.setBottomAnchor(elevatorBoardView, 450.);
 
+        // Story board
         StoryBoardView storyBoardView = new StoryBoardView();
         root_BDP.setLeft(storyBoardView);
     }
@@ -55,5 +65,9 @@ public class MainController implements Initializable {
     public void setFloorNb(int floorNb) {
         this.floorNb = floorNb;
         AnchorPane.setBottomAnchor(elevator_IMG, BASE_HEIGHT + floorNb*FLOOR_HEIGHT);
+    }
+
+    public FloorView getFloor(int floorNb) {
+        return (FloorView) floorsContainer_VBX.getChildren().get(NB_FLOORS - floorNb - 1);
     }
 }
