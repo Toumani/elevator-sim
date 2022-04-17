@@ -13,7 +13,7 @@ public class ElevatorSimApplication extends Application {
 
     @Override
     public void start(Stage primaryStage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(ElevatorSimApplication.class.getResource("/sample.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(ElevatorSimApplication.class.getResource("/main/main-view.fxml"));
         primaryStage.setScene(new Scene(fxmlLoader.load(), 400, 300));
         primaryStage.show();
     }

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.paint.*?>
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.text.*?>
+
+<fx:root type="io.elevatorsim.board.ElevatorButtonView" xmlns="http://javafx.com/javafx/16"
+         xmlns:fx="http://javafx.com/fxml/1">
+    <Circle fx:id="circle_CRC" radius="25.0" stroke="RED" strokeType="INSIDE" strokeWidth="4.0">
+        <fill>
+            <LinearGradient endX="0.4236641075774913" startX="1.0">
+                <stops>
+                    <Stop>
+                        <color>
+                            <Color opacity="0.6862068772315979"/>
+                        </color>
+                    </Stop>
+                    <Stop offset="0.007680491551459294">
+                        <color>
+                            <Color red="0.43157893419265747" green="0.43157893419265747" blue="0.43157893419265747"
+                                   opacity="0.6899999976158142"/>
+                        </color>
+                    </Stop>
+                    <Stop offset="1.0">
+                        <color>
+                            <Color red="0.821052610874176" green="0.821052610874176" blue="0.821052610874176"/>
+                        </color>
+                    </Stop>
+                </stops>
+            </LinearGradient>
+        </fill>
+    </Circle>
+    <Text fx:id="text_TXT" fill="RED" strokeType="OUTSIDE" strokeWidth="0.0" text="L">
+        <font>
+          <Font name="System Bold" size="22.0"/>
+        </font>
+    </Text>
+</fx:root>
