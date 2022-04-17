@@ -4,7 +4,7 @@
 <?import javafx.scene.shape.*?>
 <?import javafx.scene.text.*?>
 
-<fx:root type="io.elevatorsim.board.ElevatorButtonView" xmlns="http://javafx.com/javafx/16"
+<fx:root type="io.elevatorsim.elevator.ElevatorButtonView" xmlns="http://javafx.com/javafx/16"
          xmlns:fx="http://javafx.com/fxml/1">
     <Circle fx:id="circle_CRC" radius="25.0" stroke="RED" strokeType="INSIDE" strokeWidth="4.0">
         <fill>

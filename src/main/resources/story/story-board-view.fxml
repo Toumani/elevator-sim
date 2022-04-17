@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.scene.text.Font?>
+<?import javafx.geometry.Insets?>
+<fx:root type="io.elevatorsim.story.StoryBoardView" prefWidth="400.0" spacing="10.0" BorderPane.alignment="CENTER" xmlns="http://javafx.com/javafx"
+         xmlns:fx="http://javafx.com/fxml">
+    <children>
+        <Label text="Story board">
+            <font>
+                <Font name="System Bold" size="17.0" />
+            </font>
+            <VBox.margin>
+                <Insets />
+            </VBox.margin>
+        </Label>
+        <FlowPane hgap="10.0">
+            <children>
+                <TextField fx:id="nbUser_TXTF" prefColumnCount="2" />
+                <Label fx:id="user_LBL" text="user(s)" />
+                <ComboBox fx:id="action_CMB" prefWidth="150.0" promptText="action" />
+                <Label text="at floor" />
+                <TextField fx:id="floorNb_TXTF" prefColumnCount="2" />
+            </children></FlowPane>
+        <Button fx:id="execute_BTN" mnemonicParsing="false" text="Execute" />
+    </children>
+    <BorderPane.margin>
+        <Insets />
+    </BorderPane.margin>
+    <padding>
+        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+    </padding>
+</fx:root>

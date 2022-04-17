@@ -1,21 +1,22 @@
 package io.elevatorsim.main;
 
 import io.elevatorsim.ElevatorSimApplication;
-import io.elevatorsim.board.ElevatorBoardView;
-import io.elevatorsim.board.ElevatorButtonView;
+import io.elevatorsim.elevator.ElevatorBoardView;
+import io.elevatorsim.elevator.ElevatorButtonView;
+import io.elevatorsim.story.StoryBoardView;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
 
 import java.net.URL;
 import java.util.ResourceBundle;
 
 public class MainController implements Initializable {
-    @FXML
-    private AnchorPane root_ANC;
-    @FXML
-    private ImageView elevator_IMG;
+    @FXML private BorderPane root_BDP;
+    @FXML private AnchorPane root_ANC;
+    @FXML private ImageView elevator_IMG;
 
     private int floorNb = 0;
 
@@ -29,23 +30,26 @@ public class MainController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        ElevatorBoardView board = new ElevatorBoardView(5);
-        board.add(new ElevatorButtonView(board, "L", 0, true));
-        board.add(new ElevatorButtonView(board, "1", 1));
-        board.add(new ElevatorButtonView(board, "2", 2));
-        board.add(new ElevatorButtonView(board, "3", 3));
-        board.add(new ElevatorButtonView(board, "4", 4));
-        board.add(new ElevatorButtonView(board, "5", 5));
-        board.add(new ElevatorButtonView(board, "6", 6));
-        board.add(new ElevatorButtonView(board, "7", 7));
-        board.add(new ElevatorButtonView(board, "8", 8));
-        board.add(new ElevatorButtonView(board, "9", 9));
+        ElevatorBoardView elevatorBoardView = new ElevatorBoardView(5);
+        elevatorBoardView.add(new ElevatorButtonView(elevatorBoardView, "L", 0, true));
+        elevatorBoardView.add(new ElevatorButtonView(elevatorBoardView, "1", 1));
+        elevatorBoardView.add(new ElevatorButtonView(elevatorBoardView, "2", 2));
+        elevatorBoardView.add(new ElevatorButtonView(elevatorBoardView, "3", 3));
+        elevatorBoardView.add(new ElevatorButtonView(elevatorBoardView, "4", 4));
+        elevatorBoardView.add(new ElevatorButtonView(elevatorBoardView, "5", 5));
+        elevatorBoardView.add(new ElevatorButtonView(elevatorBoardView, "6", 6));
+        elevatorBoardView.add(new ElevatorButtonView(elevatorBoardView, "7", 7));
+        elevatorBoardView.add(new ElevatorButtonView(elevatorBoardView, "8", 8));
+        elevatorBoardView.add(new ElevatorButtonView(elevatorBoardView, "9", 9));
 
         AnchorPane.setBottomAnchor(elevator_IMG, BASE_HEIGHT + floorNb*FLOOR_HEIGHT);
 
-        root_ANC.getChildren().add(board);
-        AnchorPane.setRightAnchor(board, 45.);
-        AnchorPane.setBottomAnchor(board, 450.);
+        root_ANC.getChildren().add(elevatorBoardView);
+        AnchorPane.setRightAnchor(elevatorBoardView, 45.);
+        AnchorPane.setBottomAnchor(elevatorBoardView, 450.);
+
+        StoryBoardView storyBoardView = new StoryBoardView();
+        root_BDP.setLeft(storyBoardView);
     }
 
     public void setFloorNb(int floorNb) {

@@ -1,4 +1,4 @@
-package io.elevatorsim.board;
+package io.elevatorsim.elevator;
 
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
@@ -36,7 +36,7 @@ public class ElevatorButtonView extends StackPane implements Initializable {
         this.floorNb = floorNb;
         this.selected.set(selected);
 
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/board/elevator-button.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/elevator/elevator-button.fxml"));
         fxmlLoader.setRoot(this);
         fxmlLoader.setController(this);
 

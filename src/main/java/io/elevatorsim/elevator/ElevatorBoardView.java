@@ -1,4 +1,4 @@
-package io.elevatorsim.board;
+package io.elevatorsim.elevator;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -25,7 +25,7 @@ public class ElevatorBoardView extends GridPane implements Initializable {
     public ElevatorBoardView(int nbRow) {
         this.nbRow = nbRow;
 
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/board/elevator-board-view.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/elevator/elevator-board-view.fxml"));
         fxmlLoader.setRoot(this);
         fxmlLoader.setController(this);
 
