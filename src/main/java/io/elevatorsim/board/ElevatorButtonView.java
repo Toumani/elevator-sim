@@ -6,6 +6,7 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -20,14 +21,19 @@ public class ElevatorButtonView extends StackPane implements Initializable {
     @FXML Text text_TXT;
 
     private final BooleanProperty selected = new SimpleBooleanProperty();
+
+    private final ElevatorBoardView parent;
     private final String text;
+    private final int floorNb;
 
-    public ElevatorButtonView() { this(""); }
+    public ElevatorButtonView() { this(null, "", 0); }
 
-    public ElevatorButtonView(String text) { this(text, false); }
+    public ElevatorButtonView(ElevatorBoardView parent, String text, int floorNb) { this(parent, text, floorNb, false); }
 
-    public ElevatorButtonView(String text, boolean selected) {
+    public ElevatorButtonView(ElevatorBoardView parent, String text, int floorNb, boolean selected) {
+        this.parent = parent;
         this.text = text;
+        this.floorNb = floorNb;
         this.selected.set(selected);
 
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/board/elevator-button.fxml"));
@@ -48,5 +54,13 @@ public class ElevatorButtonView extends StackPane implements Initializable {
         text_TXT.fillProperty().bind(Bindings.when(selected).then(Color.RED).otherwise(Color.BLACK));
         circle_CRC.strokeProperty().bind(Bindings.when(selected).then(Color.RED).otherwise(Color.BLACK));
         circle_CRC.strokeWidthProperty().bind(Bindings.when(selected).then(4).otherwise(2));
+
+        this.setOnMouseClicked((MouseEvent e) -> requestSelection());
     }
+
+    public void requestSelection() {
+        parent.requestSelection(this);
+    }
+
+    public int getFloorNb() { return floorNb; }
 }

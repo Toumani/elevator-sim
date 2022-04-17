@@ -3,7 +3,6 @@ package io.elevatorsim.board;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 
@@ -11,11 +10,15 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import static io.elevatorsim.ElevatorSimApplication.mainController;
+
 public class ElevatorBoardView extends GridPane implements Initializable {
     @FXML GridPane root_GRD;
 
     private int nbButtons = 0;
     private final int nbRow;
+
+    private ElevatorButtonView selectedButton;
 
     public ElevatorBoardView() { this(1); }
 
@@ -30,7 +33,7 @@ public class ElevatorBoardView extends GridPane implements Initializable {
         catch (IOException exception) { throw new RuntimeException(exception); }
     }
 
-    public void add(Node child) {
+    public void add(ElevatorButtonView child) {
         int columnIndex, rowIndex;
         if (nbButtons % 2 == 0) {
             columnIndex = 0;
@@ -43,6 +46,14 @@ public class ElevatorBoardView extends GridPane implements Initializable {
 
         super.add(child, columnIndex, rowIndex);
         nbButtons++;
+
+        if (child.isSelected()) {
+            selectedButton = child;
+            getChildren().forEach(it -> {
+                if (it != selectedButton)
+                    ((ElevatorButtonView) it).setSelected(false);
+            });
+        }
     }
 
     @Override
@@ -51,5 +62,18 @@ public class ElevatorBoardView extends GridPane implements Initializable {
         for (int i = 0; i < nbRow; i++) {
             root_GRD.getRowConstraints().add(new RowConstraints(50., 50., 50.));
         }
+    }
+
+    public boolean requestSelection(ElevatorButtonView button) {
+        if (button == selectedButton)
+            return false;
+
+        selectedButton.setSelected(false);
+        button.setSelected(true);
+        selectedButton = button;
+
+        mainController.setFloorNb(button.getFloorNb());
+
+        return true;
     }
 }
