@@ -4,6 +4,7 @@ import io.elevatorsim.ElevatorSimApplication;
 import io.elevatorsim.elevator.ElevatorBoardView;
 import io.elevatorsim.elevator.ElevatorButtonView;
 import io.elevatorsim.story.StoryBoardView;
+import javafx.animation.TranslateTransition;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.image.ImageView;
@@ -12,6 +13,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 
 import java.net.URL;
+import javafx.util.Duration;
 import java.util.ResourceBundle;
 
 public class MainController implements Initializable {
@@ -20,11 +22,14 @@ public class MainController implements Initializable {
     @FXML private VBox floorsContainer_VBX;
     @FXML private ImageView elevator_IMG;
 
-    private int floorNb = 0;
+    private int elevatorFloorNb = 0;
+    private boolean elevatorMoving = false;
 
     private final static double BASE_HEIGHT = 110.;
     private final static double FLOOR_HEIGHT = 80;
     private final static int NB_FLOORS = 10;
+    private final static Duration ONE_FLOOR_DURATION = Duration.millis(1000);
+    private final static Duration START_AND_STOP_DURATION = Duration.millis(1000);
 
     public MainController() {
         ElevatorSimApplication.mainController = this;
@@ -51,7 +56,7 @@ public class MainController implements Initializable {
         elevatorBoardView.add(new ElevatorButtonView(elevatorBoardView, "8", 8));
         elevatorBoardView.add(new ElevatorButtonView(elevatorBoardView, "9", 9));
 
-        AnchorPane.setBottomAnchor(elevator_IMG, BASE_HEIGHT + floorNb*FLOOR_HEIGHT);
+        AnchorPane.setBottomAnchor(elevator_IMG, BASE_HEIGHT + elevatorFloorNb *FLOOR_HEIGHT);
 
         root_ANC.getChildren().add(elevatorBoardView);
         AnchorPane.setRightAnchor(elevatorBoardView, 45.);
@@ -62,12 +67,23 @@ public class MainController implements Initializable {
         root_BDP.setLeft(storyBoardView);
     }
 
-    public void setFloorNb(int floorNb) {
-        this.floorNb = floorNb;
-        AnchorPane.setBottomAnchor(elevator_IMG, BASE_HEIGHT + floorNb*FLOOR_HEIGHT);
+    public void moveElevatorToFloorNb(int floorNb) {
+        // Animation
+        int floorsDelta = this.elevatorFloorNb - floorNb;
+        Duration translationDuration = ONE_FLOOR_DURATION.multiply(Math.abs(floorsDelta)).add(START_AND_STOP_DURATION);
+        TranslateTransition translate = new TranslateTransition(translationDuration, elevator_IMG);
+        translate.setByY(floorsDelta * FLOOR_HEIGHT);
+        elevatorMoving = true;
+        translate.play();
+        translate.setOnFinished((ActionEvent) -> {
+            this.elevatorMoving = false;
+            this.elevatorFloorNb = floorNb;
+        });
     }
 
     public FloorView getFloor(int floorNb) {
         return (FloorView) floorsContainer_VBX.getChildren().get(NB_FLOORS - floorNb - 1);
     }
+
+    public boolean isElevatorMoving() { return this.elevatorMoving; }
 }
