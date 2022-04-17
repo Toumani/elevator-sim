@@ -14,7 +14,7 @@
                <Image url="@building.png" />
             </image>
          </ImageView>
-         <ImageView fx:id="elevator_IMG" fitHeight="80.0" fitWidth="54.0" layoutX="236.0" layoutY="636.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="110.0" AnchorPane.rightAnchor="510.0">
+         <ImageView fx:id="elevator_IMG" fitHeight="80.0" fitWidth="54.0" layoutX="236.0" layoutY="636.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="110.0" AnchorPane.rightAnchor="580.0">
             <image>
                <Image url="@elevator-closed.png" />
             </image>
@@ -42,6 +42,11 @@
                            </ImageView>
                         </children>
                      </HBox>
+                     <ImageView fitHeight="43.0" fitWidth="43.0" pickOnBounds="true" preserveRatio="true" translateX="70.0" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="185.0">
+                        <image>
+                           <Image url="@woman_standing.png" />
+                        </image>
+                     </ImageView>
                   </children>
                </AnchorPane>
             </children>

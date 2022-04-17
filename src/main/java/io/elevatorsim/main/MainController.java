@@ -7,6 +7,7 @@ import io.elevatorsim.story.StoryBoardView;
 import javafx.animation.TranslateTransition;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
@@ -81,8 +82,26 @@ public class MainController implements Initializable {
         });
     }
 
+    public void openElevator() {
+        URL url = getClass().getResource("/main/elevator-opened.png");
+        if (url == null)
+            throw new RuntimeException();
+        elevator_IMG.setImage(new Image("file://" + url.getPath()));
+    }
+
+    public void closeElevator() {
+        URL url = getClass().getResource("/main/elevator-closed.png");
+        if (url == null)
+            throw new RuntimeException();
+        elevator_IMG.setImage(new Image("file://" + url.getPath()));
+    }
+
     public FloorView getFloor(int floorNb) {
         return (FloorView) floorsContainer_VBX.getChildren().get(NB_FLOORS - floorNb - 1);
+    }
+
+    public FloorView getElevatorFloor() {
+        return getFloor(elevatorFloorNb);
     }
 
     public boolean isElevatorMoving() { return this.elevatorMoving; }

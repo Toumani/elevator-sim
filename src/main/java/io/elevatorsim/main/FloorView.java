@@ -5,6 +5,7 @@ import javafx.animation.ParallelTransition;
 import javafx.animation.SequentialTransition;
 import javafx.animation.TranslateTransition;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -98,12 +99,27 @@ public class FloorView extends AnchorPane implements Initializable {
 
     }
 
-    public void pullRandomUser() {
-        System.out.println("Not implemented yet"); // TODO corresponds to user leaving the elevator and accessing the floor
-    }
+    public void pullNRandomUser(int n, EventHandler<ActionEvent> callback) {
+        SequentialTransition sequentialTransition = new SequentialTransition();
+        for (int i = 0; i < n; i++) {
+            Node user = createRandomUser();
+            this.getChildren().add(user);
+            AnchorPane.setBottomAnchor(user, 10.);
+            AnchorPane.setRightAnchor(user, 185.);
 
-    public void pullNRandomUser(int n) {
-        System.out.println("Not implemented yet"); // TODO corresponds to user leaving the elevator and accessing the floor
+            TranslateTransition translateTransition = new TranslateTransition(TRANSLATE_DURATION, user);
+            translateTransition.setByX(70);
+
+            FadeTransition fadeTransition = new FadeTransition(FADE_DURATION, user);
+            fadeTransition.setFromValue(1.);
+            fadeTransition.setToValue(0.);
+            fadeTransition.setOnFinished(event -> this.getChildren().remove(user));
+
+            sequentialTransition.getChildren().add(translateTransition);
+            sequentialTransition.getChildren().add(fadeTransition);
+        }
+        sequentialTransition.setOnFinished(callback);
+        sequentialTransition.play();
     }
 
     private ImageView createRandomUser() {

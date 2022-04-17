@@ -63,15 +63,17 @@ public class StoryBoardView extends VBox implements Initializable {
         execute_BTN.setOnAction((ActionEvent e) -> {
             System.out.println(nbUser.get() + " user(s) " + action_CMB.getSelectionModel().getSelectedItem() + " at floor " + floorNb.get());
             FloorView floorView = mainController.getFloor(floorNb.get());
+            FloorView elevatorFloorView = mainController.getElevatorFloor();
             switch (action_CMB.getSelectionModel().getSelectedItem()) {
                 case ARRIVE:
-                        floorView.pushNRandomUser(nbUser.get());
+                    floorView.pushNRandomUser(nbUser.get());
                     break;
                 case ENTER:
-                    floorView.popNUser(nbUser.get());
+                    elevatorFloorView.popNUser(nbUser.get());
                     break;
                 case EXIT:
-                    floorView.pullNRandomUser(nbUser.get());
+                    mainController.openElevator();
+                    elevatorFloorView.pullNRandomUser(nbUser.get(), (ActionEvent event) -> mainController.closeElevator());
                     break;
             }
         });
