@@ -33,11 +33,27 @@ public class FloorView extends AnchorPane implements Initializable {
         queue_HBX.getChildren().add(createRandomUser());
     }
 
+    public void pushNRandomUser(int n) {
+        for (int i = 0; i < n; i++)
+            queue_HBX.getChildren().add(createRandomUser());
+    }
+
     public void popUser() {
-        queue_HBX.getChildren().remove(0);
+        try { queue_HBX.getChildren().remove(0); }
+        catch (IndexOutOfBoundsException ignored) { }
+    }
+
+    public void popNUser(int n) {
+        try { queue_HBX.getChildren().remove(0, n); }
+        catch (IndexOutOfBoundsException ignored) { }
+
     }
 
     public void pullRandomUser() {
+        System.out.println("Not implemented yet"); // TODO corresponds to user leaving the elevator and accessing the floor
+    }
+
+    public void pullNRandomUser(int n) {
         System.out.println("Not implemented yet"); // TODO corresponds to user leaving the elevator and accessing the floor
     }
 

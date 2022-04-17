@@ -26,8 +26,8 @@ public class StoryBoardView extends VBox implements Initializable {
     @FXML ComboBox<Action> action_CMB;
     @FXML Button execute_BTN;
 
-    private final IntegerProperty nbUser = new SimpleIntegerProperty();
-    private final IntegerProperty floorNb = new SimpleIntegerProperty();
+    private final IntegerProperty nbUser = new SimpleIntegerProperty(1);
+    private final IntegerProperty floorNb = new SimpleIntegerProperty(0);
 
     public StoryBoardView() {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/story/story-board-view.fxml"));
@@ -65,16 +65,13 @@ public class StoryBoardView extends VBox implements Initializable {
             FloorView floorView = mainController.getFloor(floorNb.get());
             switch (action_CMB.getSelectionModel().getSelectedItem()) {
                 case ARRIVE:
-                    for (int i = 0; i < nbUser.get(); i++)
-                        floorView.pushRandomUser();
+                        floorView.pushNRandomUser(nbUser.get());
                     break;
                 case ENTER:
-                    for (int i = 0; i < nbUser.get(); i++)
-                        floorView.popUser();
+                    floorView.popNUser(nbUser.get());
                     break;
                 case EXIT:
-                    for (int i = 0; i < nbUser.get(); i++)
-                        floorView.pullRandomUser();
+                    floorView.pullNRandomUser(nbUser.get());
                     break;
             }
         });
@@ -82,13 +79,14 @@ public class StoryBoardView extends VBox implements Initializable {
     }
 
     private void bindTextFieldToIntegerProperty(TextField textField, IntegerProperty integerProperty) {
-        textField.textProperty().addListener(((observable, oldValue, newValue) -> {
-            try {
-                integerProperty.set(Integer.parseInt(newValue));
-                textField.setText(newValue);
-            } catch (NumberFormatException ex) {
-                textField.setText(oldValue);
-            }
+        textField.focusedProperty().addListener(((observable, oldValue, newValue) -> {
+            if (!newValue) // on focus lost
+                try {
+                    integerProperty.set(Integer.parseInt(textField.getText()));
+                    textField.setText(textField.getText());
+                } catch (NumberFormatException ex) {
+                    textField.setText("0");
+                }
         }));
     }
 }
