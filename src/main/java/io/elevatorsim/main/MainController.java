@@ -5,6 +5,8 @@ import io.elevatorsim.elevator.ElevatorBoardView;
 import io.elevatorsim.elevator.ElevatorButtonView;
 import io.elevatorsim.story.StoryBoardView;
 import javafx.animation.TranslateTransition;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.image.Image;
@@ -68,7 +70,7 @@ public class MainController implements Initializable {
         root_BDP.setLeft(storyBoardView);
     }
 
-    public void moveElevatorToFloorNb(int floorNb) {
+    public void moveElevatorToFloorNb(int floorNb, EventHandler<ActionEvent> callback) {
         // Animation
         int floorsDelta = this.elevatorFloorNb - floorNb;
         Duration translationDuration = ONE_FLOOR_DURATION.multiply(Math.abs(floorsDelta)).add(START_AND_STOP_DURATION);
@@ -76,9 +78,11 @@ public class MainController implements Initializable {
         translate.setByY(floorsDelta * FLOOR_HEIGHT);
         elevatorMoving = true;
         translate.play();
-        translate.setOnFinished((ActionEvent) -> {
+        translate.setOnFinished((ActionEvent actionEvent) -> {
             this.elevatorMoving = false;
             this.elevatorFloorNb = floorNb;
+            getElevatorFloor().executeStories();
+            callback.handle(actionEvent);
         });
     }
 
@@ -103,6 +107,8 @@ public class MainController implements Initializable {
     public FloorView getElevatorFloor() {
         return getFloor(elevatorFloorNb);
     }
+
+    public int getElevatorFloorNb() { return elevatorFloorNb; }
 
     public boolean isElevatorMoving() { return this.elevatorMoving; }
 }

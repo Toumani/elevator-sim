@@ -1,5 +1,8 @@
 package io.elevatorsim.main;
 
+import io.elevatorsim.story.ElevatorStory;
+import io.elevatorsim.story.Story;
+import io.elevatorsim.story.UserStory;
 import javafx.animation.FadeTransition;
 import javafx.animation.ParallelTransition;
 import javafx.animation.SequentialTransition;
@@ -17,13 +20,21 @@ import javafx.scene.layout.HBox;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 
 import static io.elevatorsim.Constants.FADE_DURATION;
 import static io.elevatorsim.Constants.TRANSLATE_DURATION;
+import static io.elevatorsim.ElevatorSimApplication.mainController;
 
 public class FloorView extends AnchorPane implements Initializable {
     @FXML HBox queue_HBX;
+
+    private int nbStoriesExecuting = 0;
+
+    private final List<UserStory> userStoryQueue;
+    private final List<ElevatorStory> elevatorStoryQueue;
 
     private static final int USER_WIDTH = 43;
 
@@ -31,6 +42,9 @@ public class FloorView extends AnchorPane implements Initializable {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/main/floor-view.fxml"));
         fxmlLoader.setRoot(this);
         fxmlLoader.setController(this);
+
+        userStoryQueue = new ArrayList<>();
+        elevatorStoryQueue = new ArrayList<>();
 
         try { fxmlLoader.load(); }
         catch (IOException exception) { throw new RuntimeException(exception); }
@@ -67,7 +81,7 @@ public class FloorView extends AnchorPane implements Initializable {
         fadeTransition.setOnFinished((ActionEvent e) -> queue_HBX.getChildren().remove(0));
     }
 
-    public void popNUser(int n) {
+    public void popNUser(int n, EventHandler<ActionEvent> callback) {
         try {
             if (n > queue_HBX.getChildren().size())
                 return;
@@ -89,9 +103,10 @@ public class FloorView extends AnchorPane implements Initializable {
                 }
             }
             SequentialTransition sequentialTransition = new SequentialTransition(fadeTransitions, translateTransitions);
-            sequentialTransition.setOnFinished((ActionEvent) -> {
+            sequentialTransition.setOnFinished((ActionEvent actionEvent) -> {
                 queue_HBX.getChildren().remove(0, n);
                 queue_HBX.getChildren().forEach(it -> it.setTranslateX(0));
+                callback.handle(actionEvent);
             });
             sequentialTransition.play();
         }
@@ -118,8 +133,45 @@ public class FloorView extends AnchorPane implements Initializable {
             sequentialTransition.getChildren().add(translateTransition);
             sequentialTransition.getChildren().add(fadeTransition);
         }
-        sequentialTransition.setOnFinished(callback);
+        sequentialTransition.setOnFinished((ActionEvent actionEvent) -> {
+            mainController.closeElevator();
+            callback.handle(actionEvent);
+        });
         sequentialTransition.play();
+    }
+
+    public void addStory(Story story) {
+        if (story instanceof UserStory)
+            userStoryQueue.add((UserStory) story);
+        else if (story instanceof ElevatorStory)
+            if (nbStoriesExecuting > 0) {
+                startStoryExecution();
+                story.execute((ActionEvent event) -> endStoryExecution());
+            }
+            else
+                story.execute();
+    }
+
+    public void executeStories() {
+        for (UserStory story : userStoryQueue) {
+            startStoryExecution();
+            story.execute((ActionEvent event) -> endStoryExecution());
+        }
+
+        userStoryQueue.clear();
+    }
+
+    private void startStoryExecution() {
+        nbStoriesExecuting++;
+    }
+
+    private void endStoryExecution() {
+        nbStoriesExecuting--;
+        if (nbStoriesExecuting == 0) {
+            for (Story story : elevatorStoryQueue)
+                story.execute();
+            elevatorStoryQueue.clear();
+        }
     }
 
     private ImageView createRandomUser() {

@@ -75,7 +75,7 @@ public class ElevatorBoardView extends GridPane implements Initializable {
         button.setSelected(true);
         selectedButton = button;
 
-        mainController.moveElevatorToFloorNb(button.getFloorNb());
+        mainController.moveElevatorToFloorNb(button.getFloorNb(), (ActionEvent) -> {});
         return true;
     }
 }

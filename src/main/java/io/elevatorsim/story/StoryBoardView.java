@@ -16,6 +16,8 @@ import javafx.util.StringConverter;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 
 import static io.elevatorsim.ElevatorSimApplication.mainController;
@@ -24,7 +26,7 @@ public class StoryBoardView extends VBox implements Initializable {
     @FXML Label user_LBL;
     @FXML TextField nbUser_TXTF, floorNb_TXTF;
     @FXML ComboBox<Action> action_CMB;
-    @FXML Button execute_BTN;
+    @FXML Button execute_BTN, start_BTN;
 
     private final IntegerProperty nbUser = new SimpleIntegerProperty(1);
     private final IntegerProperty floorNb = new SimpleIntegerProperty(0);
@@ -60,24 +62,57 @@ public class StoryBoardView extends VBox implements Initializable {
         bindTextFieldToIntegerProperty(nbUser_TXTF, nbUser);
         bindTextFieldToIntegerProperty(floorNb_TXTF, floorNb);
 
-        execute_BTN.setOnAction((ActionEvent e) -> {
-            System.out.println(nbUser.get() + " user(s) " + action_CMB.getSelectionModel().getSelectedItem() + " at floor " + floorNb.get());
-            FloorView floorView = mainController.getFloor(floorNb.get());
-            FloorView elevatorFloorView = mainController.getElevatorFloor();
-            switch (action_CMB.getSelectionModel().getSelectedItem()) {
-                case ARRIVE:
-                    floorView.pushNRandomUser(nbUser.get());
-                    break;
-                case ENTER:
-                    elevatorFloorView.popNUser(nbUser.get());
-                    break;
-                case EXIT:
-                    mainController.openElevator();
-                    elevatorFloorView.pullNRandomUser(nbUser.get(), (ActionEvent event) -> mainController.closeElevator());
-                    break;
+        execute_BTN.setOnAction((ActionEvent e) -> new UserStory(
+                nbUser.get(),
+                action_CMB.getSelectionModel().getSelectedItem(),
+                floorNb.get()
+        ).execute());
+
+        start_BTN.setOnAction((ActionEvent e) -> {
+            List<Story> stories = generateStories();
+            for (Story story : stories) {
+                register(story);
             }
         });
 
+    }
+
+    private List<Story> generateStories() {
+        List<Story> stories = new ArrayList<>(10);
+        stories.add(new UserStory(2, Action.ARRIVE, 0));
+        stories.add(new ElevatorStory(1));
+        stories.add(new UserStory(1, Action.EXIT, 1));
+        stories.add(new UserStory(2, Action.ENTER, 1));
+//        stories.add(new ElevatorStory(4));
+        stories.add(new UserStory(2, Action.EXIT, 4));
+//        stories.add(new ElevatorStory(3));
+        stories.add(new UserStory(4, Action.ARRIVE, 3));
+        stories.add(new UserStory(2, Action.ARRIVE, 2));
+        stories.add(new UserStory(4, Action.ENTER, 3));
+//        stories.add(new ElevatorStory(7));
+        stories.add(new UserStory(1, Action.EXIT, 7));
+        return stories;
+    }
+
+    private void register(Story story) {
+        int elevatorFloorNb = mainController.getElevatorFloorNb();
+        FloorView elevatorFloor = mainController.getElevatorFloor();
+        switch (story.getAction()) {
+            case ARRIVE:
+                story.execute();
+                break;
+            case ENTER:
+            case EXIT:
+                if (story.getFloorNb() == elevatorFloorNb)
+                    story.execute();
+                else
+                    mainController.getFloor(story.floorNb).addStory(story); // Add to queue
+                break;
+            case MOVE:
+                if (story.getFloorNb() != elevatorFloorNb)
+                    mainController.getFloor(story.floorNb).addStory(story); // Add to queue
+                break;
+        }
     }
 
     private void bindTextFieldToIntegerProperty(TextField textField, IntegerProperty integerProperty) {
@@ -94,5 +129,5 @@ public class StoryBoardView extends VBox implements Initializable {
 }
 
 enum Action {
-    ARRIVE, ENTER, EXIT
+    ARRIVE, ENTER, EXIT, MOVE
 }

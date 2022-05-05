@@ -26,6 +26,7 @@
                 <TextField fx:id="floorNb_TXTF" text="0" prefColumnCount="2" />
             </children></FlowPane>
         <Button fx:id="execute_BTN" mnemonicParsing="false" text="Execute" />
+        <Button fx:id="start_BTN" mnemonicParsing="false" text="Start" />
     </children>
     <BorderPane.margin>
         <Insets />
