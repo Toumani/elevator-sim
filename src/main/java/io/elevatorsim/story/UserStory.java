@@ -22,7 +22,7 @@ public class UserStory extends Story {
         FloorView elevatorFloorView = mainController.getElevatorFloor();
         switch (action) {
             case ARRIVE:
-                floorView.pushNRandomUser(nbUser);
+                floorView.pushNRandomUser(nbUser, callback);
                 break;
             case ENTER:
                 elevatorFloorView.popNUser(nbUser, callback);

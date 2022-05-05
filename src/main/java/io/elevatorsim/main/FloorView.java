@@ -55,18 +55,20 @@ public class FloorView extends AnchorPane implements Initializable {
 
     }
 
-    public void pushRandomUser() {
-        Node newUser = createRandomUser();
-        queue_HBX.getChildren().add(newUser);
-        FadeTransition fadeTransition = new FadeTransition(FADE_DURATION, newUser);
-        fadeTransition.setFromValue(0.0);
-        fadeTransition.setToValue(1.0);
-        fadeTransition.play();
-    }
-
-    public void pushNRandomUser(int n) {
-        for (int i = 0; i < n; i++)
-            pushRandomUser();
+    public void pushNRandomUser(int n, EventHandler<ActionEvent> callback) {
+        List<Node> newUsers = new ArrayList<>(n);
+        ParallelTransition fadeTransitions = new ParallelTransition();
+        for (int i = 0; i < n; i++) {
+            Node newUser = createRandomUser();
+            newUsers.add(newUser);
+            FadeTransition fadeTransition = new FadeTransition(FADE_DURATION, newUser);
+            fadeTransition.setFromValue(0.0);
+            fadeTransition.setToValue(1.0);
+            fadeTransitions.getChildren().add(fadeTransition);
+        }
+        queue_HBX.getChildren().addAll(newUsers);
+        fadeTransitions.setOnFinished(callback);
+        fadeTransitions.play();
     }
 
     public void popUser() {

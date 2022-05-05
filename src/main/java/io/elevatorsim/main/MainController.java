@@ -72,10 +72,11 @@ public class MainController implements Initializable {
 
     public void moveElevatorToFloorNb(int floorNb, EventHandler<ActionEvent> callback) {
         // Animation
-        int floorsDelta = this.elevatorFloorNb - floorNb;
+        int floorsDelta = floorNb - this.elevatorFloorNb;
+        System.out.println("Elevator moves from floor " + this.elevatorFloorNb + " to floor " + floorNb + " " + (floorsDelta > 0 ? "↑" : "↓"));
         Duration translationDuration = ONE_FLOOR_DURATION.multiply(Math.abs(floorsDelta)).add(START_AND_STOP_DURATION);
         TranslateTransition translate = new TranslateTransition(translationDuration, elevator_IMG);
-        translate.setByY(floorsDelta * FLOOR_HEIGHT);
+        translate.setByY(-floorsDelta * FLOOR_HEIGHT);
         elevatorMoving = true;
         translate.play();
         translate.setOnFinished((ActionEvent actionEvent) -> {

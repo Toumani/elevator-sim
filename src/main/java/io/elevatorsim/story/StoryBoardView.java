@@ -1,6 +1,5 @@
 package io.elevatorsim.story;
 
-import io.elevatorsim.main.FloorView;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.event.ActionEvent;
@@ -70,9 +69,11 @@ public class StoryBoardView extends VBox implements Initializable {
 
         start_BTN.setOnAction((ActionEvent e) -> {
             List<Story> stories = generateStories();
-            for (Story story : stories) {
-                register(story);
+            for (int i = 0; i < stories.size() - 1; i++) {
+                stories.get(i).setNextStory(stories.get(i + 1));
             }
+            Story firstStory = stories.get(0);
+            firstStory.execute((ActionEvent) -> firstStory.executeNext());
         });
 
     }
@@ -83,36 +84,21 @@ public class StoryBoardView extends VBox implements Initializable {
         stories.add(new ElevatorStory(1));
         stories.add(new UserStory(1, Action.EXIT, 1));
         stories.add(new UserStory(2, Action.ENTER, 1));
-//        stories.add(new ElevatorStory(4));
+        stories.add(new ElevatorStory(4));
         stories.add(new UserStory(2, Action.EXIT, 4));
-//        stories.add(new ElevatorStory(3));
+        stories.add(new ElevatorStory(3));
         stories.add(new UserStory(4, Action.ARRIVE, 3));
         stories.add(new UserStory(2, Action.ARRIVE, 2));
         stories.add(new UserStory(4, Action.ENTER, 3));
-//        stories.add(new ElevatorStory(7));
+        stories.add(new ElevatorStory(7));
         stories.add(new UserStory(1, Action.EXIT, 7));
+        stories.add(new ElevatorStory(2));
+        stories.add(new UserStory(2, Action.ENTER, 2));
+        stories.add(new ElevatorStory(0));
+        stories.add(new UserStory(4, Action.EXIT, 0));
+        stories.add(new UserStory(2, Action.ENTER, 0));
+        stories.add(new UserStory(2, Action.ARRIVE, 1));
         return stories;
-    }
-
-    private void register(Story story) {
-        int elevatorFloorNb = mainController.getElevatorFloorNb();
-        FloorView elevatorFloor = mainController.getElevatorFloor();
-        switch (story.getAction()) {
-            case ARRIVE:
-                story.execute();
-                break;
-            case ENTER:
-            case EXIT:
-                if (story.getFloorNb() == elevatorFloorNb)
-                    story.execute();
-                else
-                    mainController.getFloor(story.floorNb).addStory(story); // Add to queue
-                break;
-            case MOVE:
-                if (story.getFloorNb() != elevatorFloorNb)
-                    mainController.getFloor(story.floorNb).addStory(story); // Add to queue
-                break;
-        }
     }
 
     private void bindTextFieldToIntegerProperty(TextField textField, IntegerProperty integerProperty) {
